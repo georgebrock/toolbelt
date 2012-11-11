@@ -5,12 +5,18 @@ echo "You will be prompted for your password by sudo."
 sudo -k
 
 # run inside sudo
+URL=http://assets.heroku.com.s3.amazonaws.com/heroku-client/heroku-client.tgz
 sudo sh <<SCRIPT
 
   rm -rf /usr/local/heroku
   mkdir -p /usr/local/heroku
   cd /usr/local/heroku
-  wget -qO- http://assets.heroku.com.s3.amazonaws.com/heroku-client/heroku-client.tgz | tar xz
+  if [[ -z "`which wget`" ]]
+  then
+    curl -s $URL | tar xz
+  else
+    wget -qO- $URL | tar xz
+  fi
   mv heroku-client/* .
   rmdir heroku-client
 
